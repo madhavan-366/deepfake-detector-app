@@ -1,0 +1,32 @@
+services:
+  # 1. Python AI Service
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./ai-service:/app
+
+  # 2. Node.js Backend
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      # --- DATABASE CONNECTION ---
+      # I added 'DeepfakeApp' after .net/ so your data goes to the right place
+      - MONGO_URI=mongodb+srv://madhavankm2006_db_user:mongodb0006@deepfakeappdb.rt2cgme.mongodb.net/?retryWrites=true&w=majority&appName=DeepfakeAppDB
+      
+      # --- REQUIRED FOR LOGIN ---
+      - JWT_SECRET=my-super-secret-key-12345
+      # --- REQUIRED FOR CHAT ---
+      # PASTE YOUR REAL GEMINI KEY HERE
+      - GEMINI_API_KEY=AIzaSyBgsN2A1ppGHq2aeaQ-Rz2-d9ZW9GlE0Ws
+
+      # --- INTERNAL CONNECTION ---
+      - AI_SERVICE_URL=http://ai-service:5000
+    depends_on:
+      - ai-service
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules

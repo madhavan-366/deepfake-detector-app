@@ -1,0 +1,18 @@
+# Ignore Node.js junk
+node_modules/
+dist/
+build/
+.env
+.DS_Store
+
+# Ignore Python junk
+__pycache__/
+*.pyc
+venv/
+.pytest_cache/
+
+# Ignore Docker junk
+.docker/
+
+# Ignore User Uploads (Don't upload test images)
+uploads/

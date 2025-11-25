@@ -1,0 +1,101 @@
+.summary-container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.verdict-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+/* Style for FAKE badge */
+.verdict-badge.fake {
+  background-color: #d9534f; /* Red */
+}
+
+/* Style for REAL badge */
+.verdict-badge.real {
+  background-color: #5cb85c; /* Green */
+}
+
+.confidence-percent {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.confidence-bar-container {
+  width: 100%;
+  background-color: #e9ecef;
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.confidence-bar-fill {
+  height: 100%;
+  background-color: #333;
+  border-radius: 8px;
+  transition: width 0.5s ease-in-out;
+}
+
+.explanation {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.explanation strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #111;
+}
+
+.explanation p {
+  margin: 0;
+}
+/* --- NEW FIDELITY STYLES --- */
+.fidelity-check {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.fidelity-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.fidelity-badge.high {
+  background-color: #5cb85c; /* Green */
+}
+.fidelity-badge.medium {
+  background-color: #f0ad4e; /* Orange */
+}
+.fidelity-badge.low {
+  background-color: #d9534f; /* Red */
+}
