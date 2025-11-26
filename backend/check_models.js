@@ -1,28 +1,41 @@
-// main-backend/check_models.js
 const axios = require('axios');
-require('dotenv').config();
+const path = require('path');
+// Look for .env in the MAIN folder (one level up)
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const API_KEY = process.env.GEMINI_API_KEY;
-const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`;
 
-async function listModels() {
-  try {
-    console.log("Querying Google AI for available models...");
-    const response = await axios.get(url);
-    const models = response.data.models;
-    
-    console.log("\n✅ SUCCESS! Here are the models you can use:\n");
-    
-    models.forEach(model => {
-      // The previous script had a bug here. This is the fixed line:
-      if (model.supportedGenerationMethods && model.supportedGenerationMethods.includes('generateContent')) {
-        console.log(`- ${model.name.replace('models/', '')}`);
-      }
-    });
-  } catch (error) {
-    console.error("\n❌ ERROR: Could not list models.");
-    console.error(error.response ? error.response.data : error.message);
-  }
+if (!API_KEY) {
+    console.error("❌ Error: Could not find GEMINI_API_KEY in the .env file.");
+    process.exit(1);
 }
 
-listModels();
+async function checkModels() {
+    console.log("🔍 Connecting to Google Brain to list models...");
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`;
+        const response = await axios.get(url);
+        
+        console.log("\n✅ AVAILABLE MODELS:");
+        const models = response.data.models;
+        
+        // Filter only the "generateContent" models (Chat models)
+        const chatModels = models.filter(m => m.supportedGenerationMethods.includes("generateContent"));
+        
+        chatModels.forEach(model => {
+            // Clean up the name (remove "models/" prefix)
+            const name = model.name.replace("models/", "");
+            console.log(`- ${name}`);
+        });
+
+    } catch (error) {
+        console.error("\n❌ Failed to list models.");
+        if (error.response) {
+            console.error(`Error ${error.response.status}: ${JSON.stringify(error.response.data, null, 2)}`);
+        } else {
+            console.error(error.message);
+        }
+    }
+}
+
+checkModels();

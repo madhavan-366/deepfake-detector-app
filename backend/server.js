@@ -107,21 +107,34 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { question, analysisContext, role } = req.body;
     const userRole = role || 'novice';
+    
+    // --- FIX: CLEAN THE CONTEXT ---
+    // We create a copy of the data and DELETE the huge image strings
+    // This prevents the "Connection Error" / Payload too large issue
+    const cleanContext = { ...analysisContext };
+    delete cleanContext.heatmap_image;
+    delete cleanContext.original_image;
+    delete cleanContext.counterfactual_image; 
+
+    // Use the stable model
     const modelName = "gemini-2.5-flash"; 
     const geminiModel = genAI.getGenerativeModel({ model: modelName });
+    
     const prompt = `
       You are an expert AI Forensics Assistant.
       APP CONCEPTS: Heatmap, Fidelity, Robustness, Counterfactual.
-      ANALYSIS CONTEXT: ${JSON.stringify(analysisContext, null, 2)}
+      ANALYSIS CONTEXT: ${JSON.stringify(cleanContext, null, 2)}
       USER ROLE: ${userRole}
       USER QUESTION: "${question}"
-      GUIDELINES: Answer directly and briefly.
+      GUIDELINES: Answer directly and briefly. Do not mention that you cannot see the image (you have the forensic data).
     `;
+    
     const result = await geminiModel.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
     res.json({ reply: text });
   } catch (error) {
+    console.error("Chat Error:", error); // This helps us see the real error in logs
     res.status(500).json({ reply: "Sorry, I'm having trouble connecting to my brain right now." });
   }
 });
