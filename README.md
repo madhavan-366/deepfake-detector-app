@@ -47,6 +47,34 @@ If you want to run this project on your local machine, follow these steps:
 * MongoDB URI
 
 ## 1. Clone the Repository
-```bash
-git clone [https://github.com/madhavan-366/deepfake-detector-app.git](https://github.com/madhavan-366/deepfake-detector-app.git)
-cd deepfake-detector-app
+  ```bash
+  git clone [https://github.com/madhavan-366/deepfake-detector-app.git]       (https://github.com/madhavan-366/deepfake-detector-app.git)
+  cd deepfake-detector-app
+  ```
+## 2.Setup Frontend
+  ```bash
+  cd frontend
+  npm install
+  npm run dev
+  ```
+## 3.Setup Backend
+  ```bash
+  cd backend
+  npm install
+  # Create a .env file and add:
+  # MONGO_URI=your_mongodb_connection_string
+  # JWT_SECRET=your_secret_key
+  # GEMINI_API_KEY=your_google_ai_key
+  node server.js
+  ```
+## 4.Setup AI Service
+  ```bash
+  cd ai-service
+  pip install -r requirements.txt
+  python app.py
+  ```
+## Future Improvements
+* Video Deepfake Detection support.
+* Browser extension for checking images on social media.
+* Detailed heatmaps (Grad-CAM) to show manipulated regions.
+
