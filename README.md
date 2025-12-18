@@ -2,19 +2,19 @@
 
 A Full-Stack AI application that detects deepfake faces using Deep Learning (XceptionNet).
 
-🔗 **Live Demo:** [Click Here to View App](https://madhavan-366.github.io/deepfake-detector-app/)
+ **Live Demo:** [Click Here to View App](https://madhavan-366.github.io/deepfake-detector-app/)
 
-## 🚀 Key Features
+##  Key Features
 
-* **🔍 Deep Learning Analysis:** Uses a fine-tuned XceptionNet model to classify images as "Real" or "Fake".
-* **📄 AI-Powered Reporting:** Generates a downloadable PDF forensic report using **Google Gemini AI** to explain *why* an image is likely fake.
-* **🔒 Secure Authentication:** Complete Login/Signup system using JWT (JSON Web Tokens) and MongoDB.
-* **⚡ Real-Time Processing:** Fast API communication between Node.js and the Python AI Engine.
-* **📱 Responsive Design:** Fully optimized for desktop and mobile devices using Tailwind CSS.
+* **Deep Learning Analysis:** Uses a fine-tuned XceptionNet model to classify images as "Real" or "Fake".
+* **AI-Powered Reporting:** Generates a downloadable PDF forensic report using **Google Gemini AI** to explain *why* an image is likely fake.
+* **Secure Authentication:** Complete Login/Signup system using JWT (JSON Web Tokens) and MongoDB.
+* **Real-Time Processing:** Fast API communication between Node.js and the Python AI Engine.
+* **Responsive Design:** Fully optimized for desktop and mobile devices using Tailwind CSS.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## Tech Stack & Architecture
 
 This project follows a **Microservices-style Architecture**:
 
@@ -37,7 +37,7 @@ This project follows a **Microservices-style Architecture**:
 
 ---
 
-## ⚙️ How to Run Locally
+## How to Run Locally
 
 If you want to run this project on your local machine, follow these steps:
 
