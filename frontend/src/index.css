@@ -1,11 +1,53 @@
 /* frontend/src/index.css */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Core Deepfake Detector Forensic Dark Palette - STRICTLY NO BLUE / NO PURPLE */
+  --bg-main: #0B0F17;
+  --bg-card: #131B26;
+  --bg-elevated: #1C2636;
+  --bg-inset: #0A0E15;
+  --border-color: #243042;
+  --border-hover: #37465D;
+  
+  --text-main: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  
+  /* Primary Action & Verified Authentic: Emerald Green */
+  --accent-emerald: #10B981;
+  --accent-emerald-hover: #059669;
+  --accent-emerald-muted: rgba(16, 185, 129, 0.12);
+  --accent-emerald-border: rgba(16, 185, 129, 0.35);
+  
+  /* Secondary Accent & Telemetry: Precision Teal */
+  --accent-teal: #0D9488;
+  --accent-teal-hover: #0F766E;
+  --accent-teal-muted: rgba(13, 148, 136, 0.12);
+  --accent-teal-border: rgba(13, 148, 136, 0.35);
+  
+  /* Synthetic / Deepfake Alert: Crimson Red */
+  --status-fake: #EF4444;
+  --status-fake-hover: #DC2626;
+  --status-fake-muted: rgba(239, 68, 68, 0.12);
+  --status-fake-border: rgba(239, 68, 68, 0.35);
+  
+  /* Caution / Perturbation Warning: Amber */
+  --status-warn: #F59E0B;
+  --status-warn-muted: rgba(245, 158, 11, 0.12);
+  --status-warn-border: rgba(245, 158, 11, 0.35);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
-  color: #213547;
-  /* This is the light gray page background from your goal image */
-  background-color: #f8f9fa; 
+  color: var(--text-main);
+  background-color: var(--bg-main);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,8 +55,71 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+body {
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+}
+
+/* Custom Scrollbar - Dark Slate */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* Strict Focus Outline - Emerald green instead of default browser blue */
+:focus-visible {
+  outline: 2px solid var(--accent-emerald);
+  outline-offset: 2px;
+}
+
+/* Selection Color - Teal/Emerald tint, never blue */
+::selection {
+  background-color: rgba(16, 185, 129, 0.25);
+  color: var(--text-main);
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes scanline {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }

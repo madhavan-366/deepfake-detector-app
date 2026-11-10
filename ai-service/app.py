@@ -28,7 +28,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Deepfake Classifier
 xception_model = timm.create_model('xception', pretrained=False, num_classes=2)
-MODEL_PATH = 'xception_deepfake_detector.pth' # OR 'universal_detector.pth'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, 'xception_deepfake_detector.pth') # OR 'universal_detector.pth'
 xception_model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 xception_model = xception_model.to(device)
 xception_model.eval()
@@ -189,6 +190,17 @@ def generate_explanation(verdict, confidence, mode):
                     f"3. The lighting looks realistic. "
                     f"However, always remember that no AI is perfect, so check where the image came from!")
 
+# --- 4. HEALTH CHECK ENDPOINTS ---
+@app.route('/', methods=['GET'])
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({
+        'status': 'healthy',
+        'service': 'Deepfake Detector AI Engine',
+        'model_loaded': True,
+        'device': str(device)
+    }), 200
+
 # --- 5. /api/detect ENDPOINT ---
 @app.route('/api/detect', methods=['POST'])
 def predict():
@@ -323,4 +335,5 @@ def counterfactual():
     except Exception as e: return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 7860))
+    app.run(host='0.0.0.0', port=port)

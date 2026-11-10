@@ -1,7 +1,8 @@
 // frontend/src/AuthContext.jsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // You need to install this: npm install jwt-decode
+import { jwtDecode } from 'jwt-decode';
+import { API_BASE_URL } from './config';
 
 const AuthContext = createContext(null);
 
@@ -36,14 +37,13 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
-    // You might want to re-check auth on window focus or periodically for long sessions
     window.addEventListener('focus', checkAuth);
     return () => window.removeEventListener('focus', checkAuth);
   }, []);
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
       localStorage.setItem('token', res.data.token);
       const decoded = jwtDecode(res.data.token);
       setIsAuthenticated(true);
@@ -57,12 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password) => {
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/register', { email, password });
-      // For register, we just want to succeed, not automatically log in
-      // localStorage.setItem('token', res.data.token); // Removed auto-login after register
-      // const decoded = jwtDecode(res.data.token);
-      // setIsAuthenticated(true);
-      // setUser(decoded.user);
+      await axios.post(`${API_BASE_URL}/api/auth/register`, { email, password });
       return true; // Success
     } catch (err) {
       console.error("Registration error:", err.response?.data?.msg || err.message);
@@ -74,17 +69,85 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
     setUser(null);
-    // Optionally redirect to login page here if not handled by router
-    // window.location.href = '/'; // Simple full page reload to login
+  };
+
+  const changePassword = async (currentPassword, newPassword, confirmPassword) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return { success: false, message: 'You must be signed in to change your password.' };
+      }
+      const res = await axios.post(
+        `${API_BASE_URL}/api/auth/change-password`,
+        { currentPassword, newPassword, confirmPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return { success: true, message: res.data?.msg || 'Password updated successfully.' };
+    } catch (err) {
+      console.error("Change password error:", err.response?.data?.msg || err.message);
+      return {
+        success: false,
+        message: err.response?.data?.msg || 'Failed to update password. Please check your credentials.'
+      };
+    }
+  };
+
+  const resetPassword = async (email, newPassword, confirmPassword) => {
+    try {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, {
+        email,
+        newPassword,
+        confirmPassword,
+      });
+      return { success: true, message: res.data?.msg || 'Password reset successfully.' };
+    } catch (err) {
+      console.error("Reset password error:", err.response?.data?.msg || err.message);
+      return {
+        success: false,
+        message: err.response?.data?.msg || 'Failed to reset password. Please try again.',
+      };
+    }
   };
 
   if (loading) {
-    // You can render a simple loading spinner here if you wish
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '2em' }}>Loading...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '16px', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh', 
+        backgroundColor: '#0B0F17', 
+        color: '#94A3B8', 
+        fontFamily: 'Inter, sans-serif' 
+      }}>
+        <div style={{ 
+          width: '36px', 
+          height: '36px', 
+          border: '3px solid #243042', 
+          borderTopColor: '#10B981', 
+          borderRadius: '50%', 
+          animation: 'spin 1s linear infinite' 
+        }} />
+        <span style={{ 
+          fontSize: '0.9rem', 
+          letterSpacing: '0.08em', 
+          textTransform: 'uppercase', 
+          color: '#64748B' 
+        }}>
+          Verifying Session...
+        </span>
+      </div>
+    );
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout, changePassword, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

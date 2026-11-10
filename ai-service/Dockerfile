@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # Set working directory
 WORKDIR /app
 
-# Install basic tools
+# 1. Install System Dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -12,26 +12,39 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# --- OPTIMIZATION: Upgrade pip so it can find the "Fast Wheels" ---
+# 2. Upgrade pip and build tools
 RUN pip install --upgrade pip setuptools wheel
 
-# Copy requirements
-COPY requirements.txt .
+# 3. Install CPU-only PyTorch and Torchvision (reduces container size and prevents CUDA memory overhead)
+RUN pip install --no-cache-dir \
+    torch torchvision \
+    --index-url https://download.pytorch.org/whl/cpu
 
-# --- OPTIMIZATION: Prefer Binary (Pre-cooked) versions ---
-RUN pip install --no-cache-dir --prefer-binary -r requirements.txt
+# 4. Install AI Libraries + Flask + Alibi (numpy < 2.0 pinned for Alibi compatibility)
+RUN pip install --no-cache-dir --prefer-binary \
+    "numpy<2.0" \
+    flask \
+    flask-cors \
+    opencv-python-headless \
+    facenet-pytorch \
+    matplotlib \
+    scikit-image \
+    pillow \
+    requests \
+    grad-cam \
+    lime \
+    timm \
+    alibi
 
-# Install the extra AI libraries (Force binary for speed)
-RUN pip install --no-cache-dir --prefer-binary opencv-python-headless facenet-pytorch alibi matplotlib scikit-image pillow requests flask-cors
-
-# Copy the rest of the code
+# 5. Copy application code and model weights
 COPY . .
 
-# Install the final layer (Force binary)
-RUN pip install --no-cache-dir --prefer-binary grad-cam lime timm
+# 6. Set environment variables
+ENV PORT=7860 \
+    TORCH_HOME=/tmp/torch
 
-# Expose port
-EXPOSE 5000
+# 7. Expose Hugging Face Space default port
+EXPOSE 7860
 
-# Start the app
+# 8. Start application
 CMD ["python", "app.py"]

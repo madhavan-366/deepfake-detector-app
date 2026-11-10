@@ -1,8 +1,15 @@
 Flask
+flask-cors
 torch
 torchvision
 timm
 lime
-numpy
+numpy<2.0
 scikit-image
 Pillow
+opencv-python-headless
+facenet-pytorch
+matplotlib
+requests
+grad-cam
+alibi

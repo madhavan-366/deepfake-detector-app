@@ -3,19 +3,45 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import LoginPage from './LoginPage.jsx';
-import { AuthProvider, useAuth } from './AuthContext'; // Import AuthProvider and useAuth
+import { AuthProvider, useAuth } from './AuthContext';
 import './index.css';
 
-// A Wrapper component to use AuthContext
 const AppWrapper = () => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    // You can render a global loading spinner here
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '2em' }}>Loading Application...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '16px', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh', 
+        backgroundColor: '#0B0F17', 
+        color: '#94A3B8', 
+        fontFamily: 'Inter, sans-serif' 
+      }}>
+        <div style={{ 
+          width: '36px', 
+          height: '36px', 
+          border: '3px solid #243042', 
+          borderTopColor: '#10B981', 
+          borderRadius: '50%', 
+          animation: 'spin 1s linear infinite' 
+        }} />
+        <span style={{ 
+          fontSize: '0.9rem', 
+          letterSpacing: '0.08em', 
+          textTransform: 'uppercase', 
+          color: '#64748B' 
+        }}>
+          Initializing Deepfake Detector...
+        </span>
+      </div>
+    );
   }
 
-  // If authenticated, show the main app. Otherwise, show the login page.
   return isAuthenticated ? <App /> : <LoginPage />;
 };
 
